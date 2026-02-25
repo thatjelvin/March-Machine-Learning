@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Model artifacts
+outputs/model_artifacts/
+
+# Data files (too large for git)
+march-machine-learning-mania-2026/*.csv
+!march-machine-learning-mania-2026/Cities.csv
+!march-machine-learning-mania-2026/Conferences.csv
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Virtual environments
+venv/
+.env/

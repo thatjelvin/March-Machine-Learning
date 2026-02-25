@@ -118,14 +118,6 @@ def get_feature_cols(matchup_df: pd.DataFrame) -> list:
 def seed_baseline(matchup_df: pd.DataFrame) -> float:
     """Predict using seed-pairing historical win rates. Return Brier."""
     preds = matchup_df["UpsetPrior"].values.copy()
-    # UpsetPrior is P(favorite wins). If TeamA is the favorite (lower seed),
-    # then P(TeamA wins) = UpsetPrior when seedA < seedB, else 1-UpsetPrior
-    actual_preds = np.where(
-        matchup_df["SeedNum_A"] < matchup_df["SeedNum_B"],
-        1 - preds,  # UpsetPrior = P(fav wins), fav=A, so P(A wins)=UpsetPrior
-        preds        # fav=B, P(A wins) = 1-P(fav wins) = 1-UpsetPrior
-    )
-    # Actually, let's re-derive properly:
     # UpsetPrior = FavWinRate for (min_seed, max_seed) pairing
     # If SeedA < SeedB → A is favorite → P(A wins) = FavWinRate = UpsetPrior
     actual_preds = np.where(
@@ -388,7 +380,7 @@ def run_gender_pipeline(gender: str) -> dict:
         ens_oof = np.clip(
             ens_obj.predict(
                 np.column_stack([model_preds[n] for n in ["lr", "lgb"]])
-            ), 0.001, 0.999
+            ), PROB_FLOOR, PROB_CEIL
         )
     ens_brier = np.mean((y_oof - ens_oof) ** 2)
 
@@ -521,7 +513,7 @@ def generate_final_submission(artifacts_m: dict, artifacts_w: dict):
         else:
             preds = np.clip(
                 ens_obj.predict(np.column_stack([lr_cal, lgb_cal])),
-                0.001, 0.999
+                PROB_FLOOR, PROB_CEIL
             )
 
         # Clamp

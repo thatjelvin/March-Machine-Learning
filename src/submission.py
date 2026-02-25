@@ -18,6 +18,14 @@ def parse_submission_ids(sub_df: pd.DataFrame) -> pd.DataFrame:
     sub_df["Season"] = parts[0].astype(int)
     sub_df["TeamA"] = parts[1].astype(int)
     sub_df["TeamB"] = parts[2].astype(int)
+
+    # Kaggle requires TeamA < TeamB in submission IDs
+    invalid = sub_df["TeamA"] >= sub_df["TeamB"]
+    if invalid.any():
+        raise ValueError(
+            f"Submission has {invalid.sum()} matchups where TeamA >= TeamB"
+        )
+
     # Gender from TeamID range: 1xxx = Men's, 3xxx = Women's
     sub_df["Gender"] = np.where(sub_df["TeamA"] < 3000, "m", "w")
     return sub_df

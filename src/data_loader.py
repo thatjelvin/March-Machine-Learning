@@ -226,11 +226,6 @@ def build_season_aggregates(all_games: pd.DataFrame) -> pd.DataFrame:
     """
     reg = all_games[all_games["source"] == "regular"].copy()
 
-    # Melt to get one row per team-game (A side and B side)
-    rows = []
-    for _, r in [("A", "B"), ("B", "A")]:
-        pass  # handled below
-
     a_side = reg[["Season", "TeamA", "ScoreA", "ScoreB"]].rename(
         columns={"TeamA": "TeamID", "ScoreA": "Pts", "ScoreB": "OppPts"}
     )
