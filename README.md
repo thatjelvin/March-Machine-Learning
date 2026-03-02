@@ -52,6 +52,7 @@ Two independent end-to-end pipelines are run — one for Men's and one for Women
 │   ├── config.py          # Paths, constants, and hyperparameter defaults
 │   ├── data_loader.py     # Data loading, schema validation, matchup canonicalization
 │   ├── pipeline.py        # Main orchestrator (entry point)
+│   ├── backtest_2025.py   # 5-year backtesting for 2025 predictions
 │   ├── validation.py      # Data integrity checks
 │   ├── calibration.py     # Probability calibration methods
 │   ├── ensemble.py        # Model ensembling (weighted average, stacking)
@@ -103,6 +104,30 @@ This will:
 - Save model artifacts to `outputs/model_artifacts/`
 - Write `outputs/submission.csv` (ready for Kaggle upload)
 - Write OOF predictions and markdown reports to `outputs/`
+
+### 2025 Backtesting (5-Year Window)
+
+To evaluate model accuracy using only the past 5 years of data (2021-2024, excluding 2020 due to COVID) to predict and compare against actual 2025 tournament results:
+
+```bash
+python -m src.backtest_2025
+```
+
+This backtesting pipeline:
+1. Uses only data from 2020-2024 (effectively 2021-2024 due to COVID cancellation)
+2. Trains models on this limited 5-year dataset
+3. Predicts 2025 tournament matchup outcomes
+4. Compares predictions against actual 2025 results
+5. Reports comprehensive accuracy metrics including:
+   - **Brier Score**: Mean squared error of probability predictions
+   - **Log Loss**: Cross-entropy loss
+   - **Accuracy**: Percentage of correct win/loss predictions
+   - **Expected Calibration Error (ECE)**: Measures how well predicted probabilities align with observed outcomes
+   - **Upset Analysis**: How well the model predicts upsets vs favorites
+
+Output files are saved to `outputs/backtest_2025/`:
+- `predictions_m.csv`: Men's game-by-game predictions vs actuals
+- `predictions_w.csv`: Women's game-by-game predictions vs actuals
 
 ---
 
@@ -181,6 +206,8 @@ Rolling-origin cross-validation is used to respect the time ordering of seasons:
 | `outputs/calibration_report.md` | Fold-level Brier scores and calibration slope per gender |
 | `outputs/full_methodology_report.md` | Full methodology summary with final results |
 | `outputs/model_artifacts/` | Serialized model, calibration, and ensemble objects |
+| `outputs/backtest_2025/predictions_m.csv` | 2025 Men's backtesting predictions vs actuals |
+| `outputs/backtest_2025/predictions_w.csv` | 2025 Women's backtesting predictions vs actuals |
 
 ---
 

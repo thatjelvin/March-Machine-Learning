@@ -26,6 +26,15 @@ CURRENT_SEASON = 2026        # partial – no tournament yet
 # Stage 1 backtesting seasons (tournaments occurred)
 STAGE1_SEASONS = [2022, 2023, 2024, 2025]
 
+# ─── 5-Year Backtesting Configuration ────────────────────────────────────────
+# For backtesting 2025 predictions using only the past 5 years of data
+BACKTEST_TARGET_YEAR = 2025
+BACKTEST_YEARS_BACK = 5
+BACKTEST_START_YEAR = BACKTEST_TARGET_YEAR - BACKTEST_YEARS_BACK  # 2020
+# Training seasons: 2021-2024 (2020 excluded due to COVID)
+BACKTEST_TRAIN_SEASONS = [s for s in range(BACKTEST_START_YEAR, BACKTEST_TARGET_YEAR) 
+                          if s != COVID_SEASON]
+
 # Rolling-origin CV folds: train ≤ S, validate on S+1 tournament
 # Skip 2020 (no tourney) – we never validate on 2020
 M_CV_TRAIN_CUTOFFS = [y for y in range(2008, 2025) if y != 2019]
