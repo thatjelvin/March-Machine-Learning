@@ -166,6 +166,13 @@ def compute_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> dict:
     }
 
 
+def _format_seed(seed_val):
+    """Format seed value for display."""
+    if isinstance(seed_val, float):
+        return f"{seed_val:.0f}" if not np.isnan(seed_val) else "?"
+    return str(seed_val) if seed_val is not None else "?"
+
+
 # ═══════════════════════════════════════════════════════════════════════════════
 #  Main backtesting pipeline
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -425,12 +432,8 @@ def run_backtest_pipeline(gender: str) -> dict:
     print("  " + "-"*80)
     
     for idx, row in results_df.head(20).iterrows():
-        seed_a = row.get('SeedA', '?')
-        seed_b = row.get('SeedB', '?')
-        if isinstance(seed_a, float):
-            seed_a = f"{seed_a:.0f}" if not np.isnan(seed_a) else "?"
-        if isinstance(seed_b, float):
-            seed_b = f"{seed_b:.0f}" if not np.isnan(seed_b) else "?"
+        seed_a = _format_seed(row.get('SeedA', '?'))
+        seed_b = _format_seed(row.get('SeedB', '?'))
         correct_marker = "✓" if row['correct'] else "✗"
         print(f"  {int(row['TeamA']):>6} {int(row['TeamB']):>6} {seed_a:>5} {seed_b:>5} "
               f"{row['pred_ensemble']:.3f} {int(row['target']):>6} {correct_marker:>7}")
@@ -464,7 +467,7 @@ def run_backtest_pipeline(gender: str) -> dict:
             print(f"  Favorites correctly predicted: {fav_pred_correct}/{len(fav_games)} ({fav_pred_correct/len(fav_games):.1%})")
 
     # ── 20. Save results ─────────────────────────────────────────────────
-    print(f"\n[17] Saving results...")
+    print(f"\n[20] Saving results...")
     backtest_dir = OUTPUT_DIR / "backtest_2025"
     os.makedirs(backtest_dir, exist_ok=True)
     
@@ -543,7 +546,7 @@ def main():
         print(f"\n  {gender.upper()}:")
         print(f"    Training games: {s['n_train_games']}")
         print(f"    Test games: {s['n_test_games']}")
-        print(f"    Seed baseline Brier: {s['baseline_brier']:.4f}" if s['baseline_brier'] else "    Seed baseline: N/A")
+        print(f"    Seed baseline Brier: {s['baseline_brier']:.4f}" if s['baseline_brier'] is not None else "    Seed baseline: N/A")
         print(f"    Ensemble Brier: {s['ensemble_brier']:.4f}")
         print(f"    Ensemble Accuracy: {s['ensemble_accuracy']:.1%}")
     
