@@ -302,6 +302,15 @@ def compute_all_ratings(all_games: pd.DataFrame) -> pd.DataFrame:
             "glicko_rd_W": glicko_rd_w_pre,
             "glicko_L": glicko_l_pre,
             "glicko_rd_L": glicko_rd_l_pre,
+            # Post-game ratings (after this game's update)
+            "elo_W_post": elo.get(wid),
+            "elo_L_post": elo.get(lid),
+            "melo_W_post": melo.get(wid),
+            "melo_L_post": melo.get(lid),
+            "glicko_W_post": glicko.ratings[wid],
+            "glicko_rd_W_post": glicko.rds[wid],
+            "glicko_L_post": glicko.ratings[lid],
+            "glicko_rd_L_post": glicko.rds[lid],
         })
 
     game_ratings_df = pd.DataFrame(game_ratings)
@@ -334,10 +343,10 @@ def compute_all_ratings(all_games: pd.DataFrame) -> pd.DataFrame:
             # Take whichever is later
             if last_day_w >= last_day_l and len(as_w) > 0:
                 last = as_w[as_w["DayNum"] == last_day_w].iloc[-1]
-                e, me, g, grd = last["elo_W"], last["melo_W"], last["glicko_W"], last["glicko_rd_W"]
+                e, me, g, grd = last["elo_W_post"], last["melo_W_post"], last["glicko_W_post"], last["glicko_rd_W_post"]
             elif len(as_l) > 0:
                 last = as_l[as_l["DayNum"] == last_day_l].iloc[-1]
-                e, me, g, grd = last["elo_L"], last["melo_L"], last["glicko_L"], last["glicko_rd_L"]
+                e, me, g, grd = last["elo_L_post"], last["melo_L_post"], last["glicko_L_post"], last["glicko_rd_L_post"]
             else:
                 continue  # no regular season data
 

@@ -8,7 +8,7 @@ from pathlib import Path
 
 # ─── Paths ───────────────────────────────────────────────────────────────────
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-DATA_DIR = PROJECT_ROOT / "march-machine-learning-mania-2026"
+DATA_DIR = PROJECT_ROOT / "competition files"
 OUTPUT_DIR = PROJECT_ROOT / "outputs"
 ARTIFACT_DIR = OUTPUT_DIR / "model_artifacts"
 

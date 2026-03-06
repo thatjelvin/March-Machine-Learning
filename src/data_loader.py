@@ -143,7 +143,7 @@ def canonicalize_game(df: pd.DataFrame, source: str = "regular") -> pd.DataFrame
     out["source"] = source
 
     # Detailed stats (if present)
-    has_detail = f"WFGM" in df.columns
+    has_detail = "WFGM" in df.columns
     if has_detail:
         for col in _STAT_COLS:
             out[f"A_{col}"] = np.where(a_is_winner, df[f"W{col}"], df[f"L{col}"])

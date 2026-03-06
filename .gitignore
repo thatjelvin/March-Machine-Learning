@@ -10,9 +10,9 @@ build/
 outputs/model_artifacts/
 
 # Data files (too large for git)
-march-machine-learning-mania-2026/*.csv
-!march-machine-learning-mania-2026/Cities.csv
-!march-machine-learning-mania-2026/Conferences.csv
+competition files/*.csv
+!competition files/Cities.csv
+!competition files/Conferences.csv
 
 # IDE
 .idea/
